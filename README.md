@@ -1,171 +1,112 @@
-# Dark Energy and Stabilization of Extra Dimensions
+# Supernova Evidence for Dark Energy
 
-### A Computational Physics Mini-Project
+### A Data Analysis Project Inspired by Greene and Levin
 
-This project explores a question inspired by Brian Greene and Janna Levin's 2007 paper **"Dark Energy and Stabilization of Extra Dimensions"**:
+This project uses real Type Ia supernova observations to investigate evidence for dark-energy-like cosmic expansion.
 
-> **Can stabilization of compact extra dimensions produce an effective vacuum energy that behaves like dark energy?**
+The project is inspired by Brian Greene and Janna Levin's paper **"Dark Energy and Stabilization of Extra Dimensions"**, which investigates whether vacuum effects associated with compact extra dimensions could help stabilize those dimensions while producing an effective energy that behaves like dark energy.
 
-The project uses a simplified mathematical model, numerical simulations, public cosmological data, and a small machine-learning experiment.
+Rather than attempting to reproduce the advanced theoretical calculations in the paper, this project focuses primarily on **real observational data analysis**.
 
-The goal is not to reproduce the full higher-dimensional quantum field theory of the original paper, but to investigate its central physical idea in a computationally accessible way.
+The main goal is to determine whether Type Ia supernova observations are better described by a simple matter-only universe or by a universe containing a dark-energy-like component.
 
 ---
 
 ## Research Question
 
-**Can a simplified model of stabilized extra dimensions generate dark-energy-like behavior consistent with the observed expansion history of the Universe?**
+> **Can real Type Ia supernova observations distinguish between a matter-only universe and a universe containing dark energy?**
 
-The project focuses on three questions:
+A secondary question is:
 
-1. Under what conditions can an extra dimension have a stable size?
-2. Can the energy remaining after stabilization behave like dark energy?
-3. Can the resulting cosmological model be compared with real Type Ia supernova observations?
+> **How does this observational evidence connect to Greene and Levin's proposal that stabilization of extra dimensions could produce positive vacuum energy?**
 
----
-
-## Physics Model
-
-Consider a simplified universe containing the usual three large spatial dimensions and one compact extra dimension.
-
-The size of the extra dimension is represented by $b(t)$, while the expansion of the ordinary three-dimensional universe is represented by the scale factor $a(t)$.
-
-A schematic higher-dimensional metric is
-
-```math
-ds^2 = -dt^2 + a^2(t)d\mathbf{x}^2 + b^2(t)dy^2.
-```
-
-We describe the physics controlling the size of the extra dimension using an effective potential $V(b)$.
-
-A stable extra dimension corresponds to a minimum of this potential:
-
-```math
-V'(b_0)=0, \qquad V''(b_0)>0.
-```
-
-Here, $b_0$ represents the stable size of the compact extra dimension.
-
-If the dimension stabilizes at $b_0$ and
-
-```math
-V(b_0)>0,
-```
-
-the remaining approximately constant vacuum energy can behave like dark energy in the four-dimensional universe.
-
-The central idea is therefore
-
-```math
-\text{extra dimension}
-\rightarrow
-\text{stabilization}
-\rightarrow
-V(b_0)>0
-\rightarrow
-\text{dark-energy-like behavior}.
-```
-
-> **Note:** The effective potential used in this project is a simplified toy model inspired by the stabilization mechanism discussed by Greene and Levin. It is not a reproduction of their full Casimir-energy calculation.
+The project does **not** attempt to prove that extra dimensions exist or that they cause dark energy.
 
 ---
 
-## What This Project Will Do
+## Data
 
-### 1. Model Extra-Dimensional Stabilization
+The project will use the public **Pantheon+ Type Ia supernova dataset**.
 
-Construct a simplified effective potential such as
+Type Ia supernovae can be used as distance indicators because their observed brightness allows astronomers to estimate their distance.
+
+Two important quantities in the dataset are:
+
+- **Redshift** $z$, which is related to the expansion of the Universe.
+- **Distance modulus** $\mu$, which represents the inferred distance to a supernova.
+
+The primary analysis will examine how measured supernova distance changes with redshift.
+
+---
+
+## 1. Explore the Observational Data
+
+The first step is to load and examine the Pantheon+ data using Python.
+
+The analysis will investigate questions such as:
+
+- How many supernova observations are included?
+- What range of redshifts is covered?
+- How are the observations distributed across redshift?
+- How does distance modulus change with redshift?
+- What are the typical observational uncertainties?
+
+The first major result will be a **Hubble diagram** showing observed distance modulus as a function of redshift.
 
 ```math
-V(b)
-=
-\frac{A}{b^4}
--
-\frac{B}{b^p}
-+
-\frac{C}{b^q}.
+\mu_{\mathrm{observed}} \quad \text{vs.} \quad z
 ```
 
-Use numerical methods to locate equilibrium points and determine whether they satisfy
+This allows the expansion history of the Universe to be examined directly from observational data.
+
+---
+
+## 2. Compare Two Simple Cosmological Models
+
+The observational data will be compared with two simple cosmological models.
+
+### Model A: Matter-Only Universe
 
 ```math
-V'(b_0)=0,
+\Omega_m = 1,
 \qquad
-V''(b_0)>0.
+\Omega_\Lambda = 0
 ```
 
-This will identify parameter combinations that produce stable extra dimensions.
+This model contains matter but no dark energy.
 
-### 2. Simulate Stabilization Dynamics
+### Model B: Matter + Dark Energy
 
-Study the evolution of the extra dimension using a simplified equation of motion,
+A simple standard dark-energy model will use approximately
 
 ```math
-\ddot b + 3H\dot b + V'(b)=0.
+\Omega_m = 0.3,
+\qquad
+\Omega_\Lambda = 0.7.
 ```
 
-Different initial values of $b$ will be tested to determine whether they converge toward the same stable value:
-
-```math
-b(t)\rightarrow b_0.
-```
-
-### 3. Connect Stabilization to Dark Energy
-
-If the extra dimension becomes stable,
-
-```math
-b(t)\rightarrow b_0,
-```
-
-then its potential energy approaches
-
-```math
-V(b(t))\rightarrow V(b_0).
-```
-
-If $V(b_0)$ is positive and approximately constant, it can behave like vacuum energy with
-
-```math
-w=\frac{p}{\rho}\approx -1,
-```
-
-similar to a cosmological constant.
-
-### 4. Compare with Real Cosmological Data
-
-The observational part of the project will use the public **Pantheon+ Type Ia supernova dataset**.
-
-For a spatially flat cosmological model,
+For a spatially flat universe, the expansion rate can be written as
 
 ```math
 H(z)
 =
 H_0
 \sqrt{
-\Omega_m(1+z)^3
-+
-\Omega_{\mathrm{DE}}f(z)
+\Omega_m(1+z)^3+\Omega_\Lambda
 }.
 ```
 
-For cosmological-constant-like dark energy,
-
-```math
-f(z)=1.
-```
-
-The luminosity distance is
+The luminosity distance is calculated numerically from
 
 ```math
 d_L(z)
 =
 (1+z)c
 \int_0^z
-\frac{dz'}{H(z')},
+\frac{dz'}{H(z')}.
 ```
 
-and the corresponding distance modulus is
+The predicted distance modulus is then
 
 ```math
 \mu(z)
@@ -176,116 +117,220 @@ and the corresponding distance modulus is
 \right)+25.
 ```
 
-The theoretical prediction will be compared with the observed supernova distance-redshift relation.
-
-This comparison does **not** directly test for the existence of extra dimensions. Instead, it asks whether the effective cosmology produced by the simplified stabilization model can be compatible with observed cosmic expansion.
-
-### 5. Explore the Parameter Space with Machine Learning
-
-A small machine-learning component will explore combinations of model parameters such as
-
-```math
-(A,B,C,p,q).
-```
-
-For each parameter combination, the numerical model will determine quantities such as
-
-```math
-b_0,\qquad V(b_0),\qquad V''(b_0).
-```
-
-A simple classifier such as a decision tree or random forest can then learn to distinguish parameter regions that produce stable and unstable solutions.
-
-The machine-learning component is intended as a computational exploration tool rather than a replacement for the underlying physics.
+The purpose of these equations is not to derive cosmology from first principles, but to generate predictions that can be compared with real observations.
 
 ---
 
-## Expected Results
+## 3. Compare Predictions with Real Data
 
-The project aims to produce several main results:
+The predictions from both models will be plotted together with the Pantheon+ observations.
 
-- **Effective potential:** plots of $V(b)$ showing stable and unstable configurations.
-- **Stabilization dynamics:** simulations of $b(t)$ for different initial conditions.
-- **Parameter-space map:** regions where stable extra dimensions occur.
-- **Hubble diagram:** comparison of Pantheon+ supernova observations with theoretical predictions.
-- **Machine-learning analysis:** classification of stable and unstable regions of parameter space.
+This allows a direct comparison between
+
+```math
+\text{real supernova observations}
+```
+
+and
+
+```math
+\text{matter-only prediction}
+```
+
+and
+
+```math
+\text{matter + dark-energy prediction}.
+```
+
+The goal is to determine which expansion history more closely follows the observed supernova distances.
+
+---
+
+## 4. Analyze the Residuals
+
+Visual comparison alone is not enough.
+
+For each supernova, the residual between the observation and a model prediction will be calculated:
+
+```math
+r_i
+=
+\mu_{\mathrm{observed},i}
+-
+\mu_{\mathrm{model},i}.
+```
+
+If a model describes the observations well, its residuals should remain relatively close to zero without a strong systematic trend.
+
+Residuals will therefore be plotted as a function of redshift:
+
+```math
+r(z)
+=
+\mu_{\mathrm{observed}}(z)
+-
+\mu_{\mathrm{model}}(z).
+```
+
+The residual patterns of the two cosmological models can then be compared.
+
+---
+
+## 5. Quantify the Model Difference
+
+A simple numerical measure will be used to summarize how closely each model follows the observations.
+
+One possible measure is the root mean squared error:
+
+```math
+\mathrm{RMSE}
+=
+\sqrt{
+\frac{1}{N}
+\sum_{i=1}^{N}
+\left(
+\mu_i-\mu_{\mathrm{model},i}
+\right)^2
+}.
+```
+
+The two values
+
+```math
+\mathrm{RMSE}_{\mathrm{matter}}
+```
+
+and
+
+```math
+\mathrm{RMSE}_{\mathrm{dark\ energy}}
+```
+
+will be compared.
+
+A smaller residual error indicates that the corresponding model follows the observed distance-redshift relation more closely.
+
+If time permits, observational uncertainties can also be incorporated into a more formal statistical comparison.
+
+---
+
+## Connection to Greene and Levin
+
+The main part of this project is observational data analysis.
+
+Greene and Levin's work provides a theoretical motivation for asking where dark-energy-like vacuum energy might come from.
+
+In models with compact extra dimensions, let $b$ represent the size of an extra dimension and let $V(b)$ represent its effective potential.
+
+A stable size $b_0$ requires
+
+```math
+V'(b_0)=0
+```
+
+and
+
+```math
+V''(b_0)>0.
+```
+
+If the stabilized configuration also has
+
+```math
+V(b_0)>0,
+```
+
+then positive vacuum energy remains after stabilization.
+
+Conceptually, the connection is
+
+```math
+\text{extra-dimensional physics}
+\rightarrow
+\text{stabilization}
+\rightarrow
+\text{positive vacuum energy}
+\rightarrow
+\text{dark-energy-like behavior}.
+```
+
+The Pantheon+ analysis in this project investigates the **observational phenomenon that dark energy is used to explain**.
+
+It does not directly test the existence of extra dimensions.
 
 ---
 
 ## Project Workflow
 
-The project follows the sequence
+The main analysis follows a short data-driven workflow:
 
 ```math
-V(b)
+\text{Pantheon+ data}
 \rightarrow
-b(t)
+\text{Hubble diagram}
 \rightarrow
-V(b_0)
+\text{two cosmological models}
 \rightarrow
-H(z)
+\text{residuals}
 \rightarrow
-d_L(z)
-\rightarrow
-\mu(z)
-\rightarrow
-\text{observations}.
+\text{model comparison}.
 ```
 
-Machine learning will then be used to explore the parameter space efficiently.
+The results are then connected conceptually to the physical mechanism discussed by Greene and Levin.
 
 ---
 
-## Four-Week Plan
+## Expected Figures
 
-| Week | Goal |
-| --- | --- |
-| **1** | Learn the relevant physics and build the effective potential $V(b)$ |
-| **2** | Simulate stabilization and explore model parameters |
-| **3** | Analyze Pantheon+ supernova data and calculate the Hubble diagram |
-| **4** | Perform the ML parameter study, create final figures, and write the report |
+The project will focus on a small number of interpretable figures.
 
----
+### Figure 1 — Supernova Redshift Distribution
 
-## Tools
+Distribution of Pantheon+ observations across redshift.
 
-- Python
-- Jupyter Notebook
-- NumPy
-- SciPy
-- Pandas
-- Matplotlib
-- scikit-learn
+### Figure 2 — Hubble Diagram
 
----
+Observed Pantheon+ supernova distances together with predictions from:
 
-## Data
+- a matter-only model;
+- a matter + dark-energy model.
 
-The observational component will use the publicly available **Pantheon+ Type Ia supernova dataset**.
+### Figure 3 — Residual Analysis
 
-The repository will contain instructions for obtaining the public data rather than treating third-party datasets as part of this project's MIT-licensed source code.
+Residuals between observed and predicted distance modulus as a function of redshift.
+
+### Figure 4 — Model Error Comparison
+
+Comparison of the residual error for the two cosmological models.
 
 ---
 
-## Scope
+## Project Scope
 
-This is a **four-week computational physics mini-project**.
+This is designed as a short computational physics and data-analysis project.
 
-The project does not attempt to reproduce the full higher-dimensional quantum field theory of Greene and Levin or claim observational evidence for extra dimensions.
+The primary work is:
 
-Instead, it focuses on the computationally manageable question:
+**real data analysis → visualization → model comparison → interpretation**
 
-> **Can stabilization of an extra dimension produce dark-energy-like behavior?**
+Only the mathematical and physical concepts needed to understand the analysis will be introduced.
 
-The project combines:
+The project will **not** attempt to:
 
-**theoretical physics → mathematical modeling → numerical simulation → observational cosmology → machine learning**
+- derive the Friedmann equations;
+- reproduce the Greene-Levin Casimir-energy calculation;
+- solve higher-dimensional Einstein equations;
+- fit an extra-dimensional model directly to observations;
+- perform a large cosmological parameter search;
+- reproduce the full Pantheon+ cosmological analysis;
+- prove that extra dimensions are responsible for dark energy.
 
-within a scope suitable for a short independent research project.
+These topics are outside the scope of this mini-project.
 
 ---
 
-## Repository Structure
+## Suggested Repository Structure
 
 ```text
 extra-dimensions-dark-energy/
@@ -295,15 +340,8 @@ extra-dimensions-dark-energy/
 ├── requirements.txt
 │
 ├── notebooks/
-│   ├── 01_stabilization_potential.ipynb
-│   ├── 02_stabilization_dynamics.ipynb
-│   ├── 03_pantheon_analysis.ipynb
-│   └── 04_ml_parameter_search.ipynb
-│
-├── src/
-│   ├── potential.py
-│   ├── dynamics.py
-│   └── cosmology.py
+│   ├── 01_explore_pantheon.ipynb
+│   └── 02_compare_cosmological_models.ipynb
 │
 ├── data/
 │   └── README.md
@@ -311,8 +349,58 @@ extra-dimensions-dark-energy/
 ├── figures/
 │
 └── docs/
-    └── project_proposal.md
+    └── project_notes.md
 ```
+
+Only two main notebooks are required.
+
+---
+
+## Tools
+
+- Python
+- Jupyter Notebook
+- NumPy
+- Pandas
+- SciPy
+- Matplotlib
+
+No machine-learning model is required for the core project.
+
+---
+
+## Four-Week Schedule
+
+| Week | Main Task |
+| --- | --- |
+| **1** | Understand the basic concepts of redshift, supernova distance, and dark energy; load and explore Pantheon+ |
+| **2** | Create the Hubble diagram and implement the two simple cosmological models |
+| **3** | Calculate residuals and compare the models |
+| **4** | Interpret the results, connect them to Greene-Levin, and prepare the final report |
+
+Because the analysis is intentionally limited in scope, much of the project time can be spent understanding and explaining the results rather than learning advanced theory.
+
+---
+
+## Main Scientific Limitation
+
+This project tests whether real Type Ia supernova observations are better described by different simple cosmic expansion histories.
+
+It does **not** observationally test extra dimensions.
+
+The connection to Greene and Levin is theoretical:
+
+```math
+\text{observed accelerated expansion}
+\longrightarrow
+\text{need for a dark-energy-like component}
+\longrightarrow
+\text{possible physical origins}
+\longrightarrow
+\text{extra-dimensional stabilization}.
+```
+
+The distinction between **observational evidence** and a **possible theoretical explanation** is an important part of the project.
 
 ---
 
@@ -326,4 +414,6 @@ Pantheon+ Collaboration, public Type Ia supernova cosmology data release.
 
 ## License
 
-Code developed for this project is released under the **MIT License**. Third-party papers and datasets retain their original copyrights and licensing terms.
+Code developed for this project is released under the **MIT License**.
+
+Third-party papers and datasets retain their original copyrights, licenses, and citation requirements.

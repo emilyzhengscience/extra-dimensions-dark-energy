@@ -1,145 +1,77 @@
 # Supernova Evidence for Dark Energy
 
-### A Data-Analysis Project Inspired by Greene and Levin
+### A Data Analysis Project Inspired by Greene and Levin
 
-This project uses real **Pantheon+ Type Ia supernova observations** to ask:
+## Research Question
 
-> **Do observed supernova distances follow a matter-only expansion history, or are they better described by a universe containing a dark-energy-like component?**
+> **Can real Type Ia supernova observations distinguish between a matter-only universe and a universe containing dark energy?**
 
-The project is inspired by Brian R. Greene and Janna Levin's paper **"Dark Energy and Stabilization of Extra Dimensions."** The emphasis here is on **real data analysis**. Extra-dimensional physics is used only as motivation after the observational result is understood.
+This project uses the public **Pantheon+ Type Ia supernova dataset** to compare observed supernova brightnesses with predictions from simple cosmological models.
+
+It is inspired by Brian R. Greene and Janna Levin's paper **"Dark Energy and Stabilization of Extra Dimensions"**. The supernova analysis does **not** test extra dimensions directly. Instead, it first asks whether the observations support an expansion history containing a dark-energy-like component. The Greene-Levin paper is then used to discuss one possible theoretical origin of positive vacuum energy.
 
 ---
 
-## 1. The project in plain language
+## 1. What Do We Observe?
 
-For each Type Ia supernova, Pantheon+ provides measurements including:
+Type Ia supernovae can be standardized so that their observed brightness provides information about distance. For each supernova, Pantheon+ provides quantities including:
 
-- **redshift** `zHD` — related to how much cosmic expansion stretched its light;
-- **corrected standardized magnitude** `m_b_corr` — a standardized brightness measurement.
+- `zHD`: redshift used for the Hubble diagram
+- `m_b_corr`: corrected standardized apparent magnitude
+- `IS_CALIBRATOR`: whether the object is a SH0ES calibrator
 
-The analysis follows this logic:
+For this project, the Hubble-flow sample is selected using:
 
 ```text
-real observations
-      ↓
-a cosmological model predicts brightness versus redshift
-      ↓
-observation - prediction = residual
-      ↓
-combine many residuals into RMSE
-      ↓
-compare models
-      ↓
-vary a model parameter to find the smallest RMSE
+zHD > 0.01
+IS_CALIBRATOR == 0
 ```
 
-The current selection uses **1,580 Hubble-flow light-curve entries** from the 1,701-row released Pantheon+ table.
+The released table contains **1701 rows**, and this selection leaves **1580 observations**, spanning approximately
+
+```math
+0.01016 < z < 2.26137.
+```
+
+The basic observational question is simple:
+
+> At each redshift, how closely does a cosmological model predict the observed supernova brightness?
 
 ---
 
-## 2. What are Omega_m and Omega_Lambda?
+## 2. The Cosmological Model
 
-Cosmologists use density parameters, written with the Greek letter Omega (`Ω`):
+The project assumes a spatially flat universe containing matter and a cosmological-constant-like dark-energy component.
 
-```math
-\Omega_i=\frac{\rho_i}{\rho_{\mathrm{critical}}}.
-```
-
-### Matter: Omega_m
+The density parameters are:
 
 ```math
-\Omega_m
+\Omega_m = \text{matter density parameter}
 ```
 
-is the **matter density parameter**. It includes ordinary matter and dark matter.
-
-For example,
+and
 
 ```math
-\Omega_m=0.30
+\Omega_\Lambda = \text{cosmological-constant (dark-energy) density parameter}.
 ```
 
-means the matter density is 30% of the critical density.
+`Omega_m` includes both ordinary matter and dark matter.
 
-### Dark energy: Omega_Lambda
+Under the flat-universe assumption used in this project,
 
 ```math
-\Omega_\Lambda
+\Omega_m + \Omega_\Lambda = 1.
 ```
 
-is the density parameter associated here with a **cosmological constant**, the simplest dark-energy model.
-
-For example,
+Therefore, once `Omega_m` is chosen,
 
 ```math
-\Omega_\Lambda=0.70
+\Omega_\Lambda = 1-\Omega_m.
 ```
 
-means the cosmological-constant energy density is 70% of the critical density.
+This is a **model assumption**, not something imposed by the supernova data themselves.
 
----
-
-## 3. Why do they add to 1?
-
-This mini-project assumes a **spatially flat universe** and neglects radiation for this introductory analysis.
-
-Therefore,
-
-```math
-\Omega_m+\Omega_\Lambda=1.
-```
-
-Once `Ωm` is chosen, `ΩΛ` is fixed:
-
-```math
-\Omega_\Lambda=1-\Omega_m.
-```
-
-Example:
-
-```math
-\Omega_m=0.351
-```
-
-gives
-
-```math
-\Omega_\Lambda=1-0.351=0.649.
-```
-
-This is a model assumption, not something imposed by the supernova data alone:
-
-```math
-\text{data}+\text{model assumptions}
-\longrightarrow
-\text{parameter estimate}.
-```
-
----
-
-## 4. Two starting models
-
-### Model A — Matter only
-
-```math
-\Omega_m=1,\qquad\Omega_\Lambda=0.
-```
-
-### Model B — Matter + dark energy
-
-```math
-\Omega_m=0.3,\qquad\Omega_\Lambda=0.7.
-```
-
-The question is simply:
-
-> **Which model's predictions lie closer to the real Pantheon+ observations?**
-
----
-
-## 5. How does a model make a prediction?
-
-For this simplified flat matter + cosmological-constant model,
+For a flat matter + cosmological-constant universe,
 
 ```math
 E(z)=\frac{H(z)}{H_0}
@@ -155,7 +87,7 @@ D_L(z)
 (1+z)\int_0^z\frac{dz'}{E(z')}.
 ```
 
-The predicted standardized magnitude has the form
+The predicted standardized supernova magnitude can then be written as
 
 ```math
 m_{\mathrm{model}}(z)
@@ -163,50 +95,25 @@ m_{\mathrm{model}}(z)
 5\log_{10}D_L(z)+\mathcal{M}.
 ```
 
-The code fits the common offset `Mcal` for each model. This allows the project to compare the **shape** of the Hubble diagram without letting an arbitrary overall magnitude/Hubble-scale offset determine the answer.
-
-The student does not need to derive these equations from general relativity. The key idea is:
-
-> **Different values of `Ωm` produce different expansion histories, which produce different predicted supernova brightness-versus-redshift curves.**
+The constant `Mcal` is fitted separately for every model. It absorbs the unknown overall magnitude/Hubble-scale normalization, so the comparison is based mainly on the **shape of the Hubble diagram**, rather than an arbitrary vertical offset.
 
 ---
 
-## 6. What is a residual?
+## 3. Observation vs. Prediction: Residuals
 
-A residual is:
+For every supernova, the code compares the observed magnitude with the model prediction.
 
-```math
-\text{residual}=\text{observation}-\text{prediction}.
-```
-
-For this project,
+The difference is called a **residual**:
 
 ```math
-r_i=m_{\mathrm{observed},i}-m_{\mathrm{model},i}.
+r_i
+=
+m_{\mathrm{observed},i}-m_{\mathrm{model},i}.
 ```
 
-Example:
+A residual near zero means the prediction is close to the observation.
 
-```math
-m_{\mathrm{observed}}=22.10,\qquad
-m_{\mathrm{model}}=21.90
-```
-
-so
-
-```math
-r=22.10-21.90=+0.20\ \mathrm{mag}.
-```
-
-A good model should generally have residuals close to zero without a strong systematic trend with redshift.
-
----
-
-## 7. What is RMSE?
-
-There are 1,580 observations, so there are 1,580 residuals. We need one simple number that summarizes their overall size.
-
-**RMSE** means **Root Mean Squared Error**:
+Positive and negative residuals cannot simply be averaged because they could cancel each other. Instead, this project uses **Root Mean Square Error (RMSE)**:
 
 ```math
 \mathrm{RMSE}
@@ -214,278 +121,333 @@ There are 1,580 observations, so there are 1,580 residuals. We need one simple n
 \sqrt{\frac{1}{N}\sum_{i=1}^{N}r_i^2}.
 ```
 
-The name describes the calculation:
+RMSE gives one number summarizing the typical size of the model's prediction errors.
 
-1. calculate each **error** (residual);
-2. **square** it so positive and negative errors cannot cancel;
-3. take their **mean**;
-4. take the square **root** to return to magnitude units.
+**Smaller RMSE = closer agreement with the observed Hubble diagram.**
 
-Example residuals:
-
-```math
-+1,\quad -2,\quad +3
-```
-
-become
-
-```math
-1^2,\quad(-2)^2,\quad3^2
-=
-1,\quad4,\quad9.
-```
-
-Therefore,
-
-```math
-\mathrm{RMSE}
-=
-\sqrt{\frac{1+4+9}{3}}
-\approx2.16.
-```
-
-A useful intuition is:
-
-> **RMSE summarizes the typical scale of the model's prediction error. Smaller is better.**
+Residual plots are also examined because a single RMSE value can hide systematic patterns in the errors.
 
 ---
 
-## 8. Results from the successful reference run
+## 4. First Test: Two Fixed Cosmological Models
+
+As an initial comparison, the analysis evaluates two models.
+
+### Model A — Matter-only universe
+
+```math
+\Omega_m=1.0,
+\qquad
+\Omega_\Lambda=0.0.
+```
+
+Result:
 
 ```text
-Rows in released table:          1701
-Rows in selected Hubble sample:  1580
-Redshift range:                  0.01016 to 2.26137
+RMSE = 0.211276 mag
 ```
 
-| Model | `Ωm` | `ΩΛ` | RMSE |
-| --- | ---: | ---: | ---: |
-| Matter only | 1.0 | 0.0 | 0.2113 mag |
-| Matter + dark energy | 0.3 | 0.7 | 0.1539 mag |
-
-Because
+### Model B — Matter + dark energy
 
 ```math
-0.1539<0.2113,
+\Omega_m=0.3,
+\qquad
+\Omega_\Lambda=0.7.
 ```
 
-the matter + dark-energy model follows the observed Hubble-diagram shape more closely in this simplified comparison.
-
----
-
-## 9. Let the data comparison choose Omega_m
-
-Instead of testing only `Ωm = 0.3`, the program varies `Ωm`.
-
-For every trial value:
+Result:
 
 ```text
-choose Ωm
-   ↓
-ΩΛ = 1 - Ωm
-   ↓
-calculate the predicted Hubble diagram
-   ↓
-fit the common magnitude offset
-   ↓
-calculate residuals
-   ↓
-calculate RMSE
-   ↓
-try another Ωm
+RMSE = 0.153913 mag
 ```
 
-The program searches for:
+The smaller RMSE of the second model shows that, in this simplified analysis, a model containing a dark-energy-like component follows the observed supernova Hubble diagram more closely than the matter-only model.
 
-```math
-\boxed{\Omega_m\ \text{that minimizes RMSE}}.
-```
+This comparison motivates a better question:
 
-The successful reference run found:
-
-```math
-\Omega_m\approx0.35114,
-```
-
-so flatness gives
-
-```math
-\Omega_\Lambda
-=
-1-\Omega_m
-\approx0.64886.
-```
-
-The corresponding simplified RMSE was
-
-```math
-\mathrm{RMSE}\approx0.15305\ \mathrm{mag}.
-```
-
-This is a basic example of **parameter estimation / model fitting**:
-
-> The program is not told that `Ωm` should be about 0.35. It changes the parameter, compares each model with the observations, and finds where the mismatch becomes smallest.
+> Instead of choosing `Omega_m = 0.3` beforehand, can we let the supernova data determine which value gives the smallest error?
 
 ---
 
-## 10. Figures
+## 5. Scanning the Matter Density
 
-The analysis generates five figures.
+The main numerical experiment scans **1001 possible values** of `Omega_m` from 0 to 1:
 
-### Figure 1 — Redshift distribution
-
-Shows where the Pantheon+ observations lie in redshift.
-
-### Figure 2 — Hubble diagram
-
-Shows real observations together with the matter-only and matter + dark-energy predictions.
-
-### Figure 3 — Residuals
-
-Plots
-
-```math
-m_{\mathrm{observed}}-m_{\mathrm{model}}
+```text
+0.000, 0.001, 0.002, ... , 0.999, 1.000
 ```
 
-against redshift so systematic model errors are easier to see.
+For every value:
 
-### Figure 4 — Fixed-model RMSE
-
-Directly compares the RMSE of the two starting models. Smaller is better.
-
-### Figure 5 — RMSE versus Omega_m
-
-This visualizes the parameter-fitting process.
-
-The horizontal axis is `Ωm`. Because flatness is assumed,
+1. Set `Omega_m` to the scanned value.
+2. Use flatness to calculate
 
 ```math
 \Omega_\Lambda=1-\Omega_m.
 ```
 
-The vertical axis is RMSE.
+3. Calculate the predicted luminosity distance for every supernova.
+4. Fit the common magnitude offset `Mcal`.
+5. Calculate all residuals.
+6. Calculate the RMSE.
+7. Compare that RMSE with the values from all other scanned models.
 
-The plot marks:
-
-- `Ωm = 1.0`: matter-only model;
-- `Ωm = 0.3`: representative dark-energy model;
-- `Ωm ≈ 0.351`: minimum RMSE in the simplified fit.
-
-The minimum shows visually where the fitted parameter comes from.
+The best scanned model is simply the row with the **lowest RMSE**.
 
 ---
 
-## 11. Connection to Greene and Levin
+## 6. Main Result
 
-Everything above is primarily **observational data analysis**.
-
-Greene and Levin address a deeper theoretical question:
-
-> **If observations favor an expansion history containing a dark-energy-like component, what underlying physics could produce positive vacuum energy?**
-
-Their paper studies compact extra dimensions and Casimir energy.
-
-If `b` represents the size of an extra dimension and `V(b)` its effective potential, stabilization requires
+The minimum of the 1001-point scan occurs at
 
 ```math
-V'(b_0)=0,\qquad V''(b_0)>0.
+\boxed{\Omega_m=0.351}
 ```
 
-If
+and therefore, under the flat-universe assumption,
+
+```math
+\boxed{\Omega_\Lambda=0.649}.
+```
+
+The corresponding error is
+
+```math
+\boxed{\mathrm{RMSE}=0.1530481593\ \mathrm{mag}}.
+```
+
+Values around the minimum are:
+
+| `Omega_m` | `Omega_Lambda` | RMSE (mag) |
+|---:|---:|---:|
+| 0.350 | 0.650 | 0.153048552 |
+| **0.351** | **0.649** | **0.153048159** |
+| 0.352 | 0.648 | 0.153048385 |
+| 0.353 | 0.647 | 0.153049227 |
+| 0.354 | 0.646 | 0.153050682 |
+
+The RMSE decreases as the scan approaches `Omega_m ≈ 0.351` and increases again after passing it. This produces a clear minimum in the RMSE-versus-`Omega_m` curve.
+
+The important scientific logic is:
+
+```math
+\boxed{
+\text{observations}
++
+\text{model assumptions}
+\longrightarrow
+\text{parameter estimate}
+}
+```
+
+The value `0.351` was **not chosen beforehand**. It emerged from comparing the scanned models with the Pantheon+ observations.
+
+A continuous one-parameter minimization gives approximately
+
+```math
+\Omega_m \approx 0.35114,
+\qquad
+\Omega_\Lambda \approx 0.64886,
+```
+
+which is consistent with the minimum of the discrete scan.
+
+### What this result does *not* mean
+
+The correct interpretation is:
+
+> **Within our simplified flat matter + Lambda model, the value of `Omega_m` that minimizes the unweighted RMSE is approximately 0.351, corresponding to `Omega_Lambda ≈ 0.649`.**
+
+It should **not** be interpreted as a precision measurement that the Universe is exactly 35.1% matter and 64.9% dark energy. The result depends on the model assumptions and simplified statistical method used here.
+
+---
+
+## 7. Figures
+
+The analysis generates figures that show different stages of the experiment:
+
+```text
+figures/
+├── 01_redshift_distribution.png
+├── 02_hubble_diagram.png
+├── 03_residuals.png
+├── 04_model_comparison.png
+└── 05_rmse_vs_omega_m.png
+```
+
+### Figure 1 — Redshift distribution
+
+Shows where the selected Pantheon+ observations lie in redshift.
+
+### Figure 2 — Hubble diagram
+
+Shows the observed standardized supernova magnitudes together with the predicted curves from the matter-only and dark-energy models.
+
+### Figure 3 — Residuals
+
+Shows observation-minus-prediction errors as a function of redshift. This helps reveal systematic differences that may be hidden by a single RMSE number.
+
+### Figure 4 — Fixed-model comparison
+
+Compares the RMSE of the matter-only model with the example matter + dark-energy model.
+
+### Figure 5 — RMSE versus `Omega_m`
+
+This is the central parameter-scan figure. It shows how the model-data error changes as `Omega_m` is varied from 0 to 1. The lowest point occurs near
+
+```math
+\Omega_m=0.351.
+```
+
+This figure visually demonstrates how the best-fitting parameter value is obtained from the data.
+
+---
+
+## 8. Connection to Greene and Levin
+
+The observational part of this project finds that the Pantheon+ Hubble diagram is better described by a model containing a positive dark-energy-like component than by the simple matter-only model.
+
+That leads to a deeper theoretical question:
+
+> **If the Universe contains something behaving like positive vacuum energy, where could that energy come from?**
+
+Greene and Levin's paper *Dark Energy and Stabilization of Extra Dimensions* investigates one possible answer involving compact extra dimensions.
+
+Let `b` represent the size of a compact extra dimension and `V(b)` its effective potential.
+
+A stable size `b_0` requires
+
+```math
+V'(b_0)=0
+```
+
+and
+
+```math
+V''(b_0)>0.
+```
+
+If the value of the effective potential at that stable point is positive,
 
 ```math
 V(b_0)>0,
 ```
 
-the stabilized configuration can retain positive vacuum energy.
+then the stabilized configuration can retain positive vacuum energy. Greene and Levin investigate how extra-dimensional Casimir effects can contribute to such stabilization and vacuum energy.
 
-The conceptual connection is:
+The conceptual chain connecting the two parts of this project is therefore:
 
-```text
-Pantheon+ observations
-        ↓
-expansion-history comparison
-        ↓
-dark-energy-like component
-        ↓
-where could this energy come from?
-        ↓
-Greene-Levin extra-dimensional mechanism
+```math
+\text{Pantheon+ observations}
+\rightarrow
+\text{expansion-history test}
+\rightarrow
+\text{evidence for a dark-energy-like component}
+\rightarrow
+\text{question of its physical origin}
+\rightarrow
+\text{extra-dimensional stabilization as one theoretical possibility}.
 ```
 
-Pantheon+ does **not** directly test extra dimensions.
+### Important limitation
+
+**The Pantheon+ supernova data do not detect extra dimensions and do not establish the Greene-Levin mechanism as the origin of dark energy.**
+
+The observations and the theoretical paper answer different questions:
+
+- **Pantheon+ analysis:** What expansion history is consistent with the observed supernova Hubble diagram?
+- **Greene-Levin theory:** Could extra-dimensional physics provide a mechanism capable of producing positive vacuum energy?
+
+The connection is therefore an interpretation and motivation, not a direct experimental test of extra dimensions.
 
 ---
 
-## 12. Scientific limitations
+## 9. Limitations
 
-The fitted result should be described as:
+This is an educational data-analysis project rather than a publication-level cosmological parameter measurement.
 
-> **Within our simplified flat matter + Lambda model, the value of `Ωm` that minimized the unweighted RMSE was approximately 0.351, corresponding to `ΩΛ ≈ 0.649`.**
+Important simplifications include:
 
-It should not be described as:
+- spatial flatness is assumed;
+- the model contains only matter and a cosmological constant for the late-time expansion calculation;
+- radiation is neglected;
+- dark energy is assumed to behave as a cosmological constant;
+- the comparison uses an unweighted RMSE;
+- the full Pantheon+ covariance matrix is not used;
+- the analysis does not construct the complete Pantheon+ likelihood;
+- Pantheon+ light-curve entries are treated directly rather than performing a full survey-level cosmological analysis.
 
-> "We measured the Universe to be exactly 35.1% matter and 64.9% dark energy."
+A more advanced analysis could use the released covariance matrix and evaluate a statistic such as
 
-This introductory analysis assumes:
+```math
+\chi^2
+=
+\Delta m^T C^{-1}\Delta m,
+```
 
-- spatial flatness;
-- matter + cosmological constant;
-- negligible radiation for this exercise;
-- a fitted common magnitude offset;
-- unweighted RMSE as the introductory comparison statistic.
-
-A publication-level Pantheon+ analysis uses statistical and systematic covariance information and a formal likelihood.
+but that is beyond the intended scope of this mini-project.
 
 ---
 
-## 13. Run the project
+## 10. Running the Project
+
+Create a Python environment and install the required packages:
 
 ```bash
 python -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
+```
+
+Download the official Pantheon+ data:
+
+```bash
 python scripts/download_data.py
+```
+
+Run the analysis:
+
+```bash
 python scripts/analyze.py
+```
+
+Generated output is written to:
+
+```text
+figures/
+results/
 ```
 
 ---
 
-## 14. Repository structure
+## Repository Structure
 
 ```text
-extra-dimensions-dark-energy/
+.
 ├── README.md
 ├── LICENSE
 ├── requirements.txt
-├── .gitignore
 ├── data/
 │   └── README.md
 ├── scripts/
 │   ├── download_data.py
 │   └── analyze.py
 ├── figures/
-│   ├── 01_redshift_distribution.png
-│   ├── 02_hubble_diagram.png
-│   ├── 03_residuals.png
-│   ├── 04_model_comparison.png
-│   └── 05_rmse_vs_omega_m.png
 └── results/
-    ├── README.md
-    ├── model_comparison.csv
-    ├── omega_scan.csv
-    └── results.txt
 ```
+
+---
 
 ## References
 
-B. R. Greene and J. Levin, **"Dark Energy and Stabilization of Extra Dimensions,"** *Journal of High Energy Physics* **11** (2007) 096, arXiv:0707.1062.
+- B. R. Greene and J. Levin, *Dark Energy and Stabilization of Extra Dimensions*, JHEP 11 (2007) 096, arXiv:0707.1062.
+- Pantheon+SH0ES public data release, `PantheonPlusSH0ES/DataRelease`.
+- D. Brout et al., *The Pantheon+ Analysis: Cosmological Constraints*, The Astrophysical Journal 938, 110 (2022).
 
-Pantheon+SH0ES public Type Ia supernova data release.
-
-D. Brout et al., **"The Pantheon+ Analysis: Cosmological Constraints,"** *The Astrophysical Journal* **938**, 110 (2022).
+---
 
 ## License
 
-Original code in this repository is released under the MIT License. Pantheon+ data and third-party papers retain their original terms and citation requirements.
+Original code in this repository is released under the MIT License.
+
+Pantheon+ data and third-party papers retain their original licenses, terms, and citation requirements.

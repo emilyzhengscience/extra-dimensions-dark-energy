@@ -1,0 +1,55 @@
+Pantheon+ parameter-scan results
+=================================
+
+DATA
+----
+Rows in released table: 1701
+Rows in selected Hubble-flow sample: 1580
+Redshift range: 0.01016 to 2.26137
+
+MODEL ASSUMPTION
+----------------
+Spatially flat matter + Lambda model:
+
+    Omega_m + Omega_Lambda = 1
+
+PARAMETER SEARCH
+----------------
+Omega_m range: 0.000 to 1.000
+Step size:     0.001
+Models tested: 1001
+
+The program was NOT given Omega_m = 0.3 or 0.35 as the expected answer.
+Every grid value was evaluated and the smallest RMSE was selected.
+
+BEST MODEL FOUND
+----------------
+Omega_m      = 0.351
+Omega_Lambda = 0.649
+RMSE          = 0.153048 mag
+
+MATTER-ONLY ENDPOINT
+--------------------
+Omega_m      = 1.000
+Omega_Lambda = 0.000
+RMSE          = 0.211276 mag
+
+INTERPRETATION
+--------------
+For each trial model:
+
+    residual = observed magnitude - predicted magnitude
+
+RMSE summarizes the overall size of those residuals. Smaller is better.
+
+Within this simplified model, the scan discovers the Omega values above
+because they give the minimum RMSE. Matter-only is simply one endpoint
+of the same search.
+
+LIMITATION
+----------
+This is an educational unweighted-RMSE parameter scan, not the full
+Pantheon+ covariance-based cosmological likelihood.
+
+The supernova data constrain expansion history; they do not directly
+test extra dimensions.

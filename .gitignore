@@ -1,0 +1,11 @@
+# Downloaded third-party data
+data/Pantheon+SH0ES.dat
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+
+# OS/editor
+.DS_Store
+.vscode/
